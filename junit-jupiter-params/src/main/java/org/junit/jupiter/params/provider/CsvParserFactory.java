@@ -31,13 +31,13 @@ class CsvParserFactory {
 	static CsvParser createParserFor(CsvSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
 		return createParser(delimiter, LINE_SEPARATOR, SINGLE_QUOTE, annotation.emptyValue(),
-			annotation.maxCharsPerColumn());
+			annotation.maxCharsPerColumn(), annotation.ignoreTrailingAndLeadingWhitespace());
 	}
 
 	static CsvParser createParserFor(CsvFileSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
 		return createParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue(),
-			annotation.maxCharsPerColumn());
+			annotation.maxCharsPerColumn(), annotation.ignoreTrailingAndLeadingWhitespace());
 	}
 
 	private static String selectDelimiter(Annotation annotation, char delimiter, String delimiterString) {
@@ -54,12 +54,13 @@ class CsvParserFactory {
 	}
 
 	private static CsvParser createParser(String delimiter, String lineSeparator, char quote, String emptyValue,
-			int maxCharsPerColumn) {
-		return new CsvParser(createParserSettings(delimiter, lineSeparator, quote, emptyValue, maxCharsPerColumn));
+			int maxCharsPerColumn, boolean ignoreTrailingAndLeadingWhitespace) {
+		return new CsvParser(createParserSettings(delimiter, lineSeparator, quote, emptyValue, maxCharsPerColumn,
+			ignoreTrailingAndLeadingWhitespace));
 	}
 
 	private static CsvParserSettings createParserSettings(String delimiter, String lineSeparator, char quote,
-			String emptyValue, int maxCharsPerColumn) {
+			String emptyValue, int maxCharsPerColumn, boolean ignoreTrailingAndLeadingWhitespace) {
 
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
@@ -68,6 +69,8 @@ class CsvParserFactory {
 		settings.getFormat().setQuoteEscape(quote);
 		settings.setEmptyValue(emptyValue);
 		settings.setAutoConfigurationEnabled(false);
+		settings.setIgnoreLeadingWhitespaces(ignoreTrailingAndLeadingWhitespace);
+		settings.setIgnoreTrailingWhitespaces(ignoreTrailingAndLeadingWhitespace);
 		Preconditions.condition(maxCharsPerColumn > 0,
 			() -> "maxCharsPerColumn must be a positive number: " + maxCharsPerColumn);
 		settings.setMaxCharsPerColumn(maxCharsPerColumn);

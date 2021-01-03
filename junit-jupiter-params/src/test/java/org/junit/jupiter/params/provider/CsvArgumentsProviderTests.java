@@ -80,6 +80,28 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
+	void ignoresLeadingSpaces() {
+		var annotation = csvSource().lines("'', 1", " '', 2", "'' , 3", " '' , 4").ignoreTrailingAndLeadingWhitespace(
+			false).build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(
+			new Object[][] { { "", " 1" }, { " ''", " 2" }, { "'' ", " 3" }, { " '' ", " 4" } });
+	}
+
+	@Test
+	void ignoresTrailingSpaces() {
+		var annotation = csvSource().lines("1,''", "2, ''", "3,'' ", "4, '' ").ignoreTrailingAndLeadingWhitespace(
+			false).build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(
+			new Object[][] { { "1", "" }, { "2", " ''" }, { "3", "'' " }, { "4", " '' " } });
+	}
+
+	@Test
 	void understandsQuotes() {
 		var annotation = csvSource("'foo, bar'");
 
@@ -141,60 +163,6 @@ class CsvArgumentsProviderTests {
 		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("", "null", null, "apple"));
-	}
-
-	@Test
-	void defaultLeadingSpaces() {
-		var annotation = csvSource("   as, null, , apple");
-
-		var arguments = provideArguments(annotation);
-
-		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
-	}
-
-	@Test
-	void defaultLeadingSpacesWithIgnoredTrailingAndLeadingWhitespace() {
-		var annotation = csvSource(false, "   as, null, , apple");
-
-		var arguments = provideArguments(annotation);
-
-		assertThat(arguments).containsExactly(array("   as", "null", null, "apple"));
-	}
-
-	@Test
-	void defaultTrailingSpaces() {
-		var annotation = csvSource("as      , null, , apple");
-
-		var arguments = provideArguments(annotation);
-
-		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
-	}
-
-	@Test
-	void defaultTrailingSpacesWithIgnoredTrailingAndLeadingSpaces() {
-		var annotation = csvSource(false, "as      , null, , apple");
-
-		var arguments = provideArguments(annotation);
-
-		assertThat(arguments).containsExactly(array("as      ", "null", null, "apple"));
-	}
-
-	@Test
-	void defaultLeadingAndTrailingSpaces() {
-		var annotation = csvSource("        as      , null, , apple");
-
-		var arguments = provideArguments(annotation);
-
-		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
-	}
-
-	@Test
-	void defaultLeadingAndTrailingSpacesWithIgnoredTrailingAndLeadingSpaces() {
-		var annotation = csvSource(false, " as ,orange,apple");
-
-		var arguments = provideArguments(annotation);
-
-		assertThat(arguments).containsExactly(array(" as ", "orange", "apple"));
 	}
 
 	@Test

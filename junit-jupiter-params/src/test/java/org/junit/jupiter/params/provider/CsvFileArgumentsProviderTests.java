@@ -432,22 +432,23 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
-	void ignoreTrimLeadingAndTrailingSpaces(@TempDir Path tempDir) throws java.io.IOException {
+	void ignoresLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
 		var csvFile = writeClasspathResourceToFile("/trailing-leading-spaces.csv",
 			tempDir.resolve("trailing-leading-spaces.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
 				.resources("/trailing-leading-spaces.csv")//
 				.files(csvFile.toAbsolutePath().toString())//
-				.build(true);
-		System.out.println(annotation.ignoreTrailingAndLeadingWhitespace());
+				.ignoreTrailingAndLeadingWhitespace(true)//
+				.build();
+
 		var arguments = provideArguments(new ByteArrayInputStream(Files.readAllBytes(csvFile)), annotation);
 
-		assertThat(arguments).containsExactly(array("a", "b", "c"));
+		assertThat(arguments).containsExactly(array("ab", "cd"), array("ef", "gh"));
 	}
 
 	@Test
-	void notIgnoreTrimLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
+	void trimsLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
 		var csvFile = writeClasspathResourceToFile("/trailing-leading-spaces.csv",
 			tempDir.resolve("trailing-leading-spaces.csv"));
 		var annotation = csvFileSource()//
@@ -455,11 +456,12 @@ class CsvFileArgumentsProviderTests {
 				.resources("/trailing-leading-spaces.csv")//
 				.files(csvFile.toAbsolutePath().toString())//
 				.delimiter(',')//
-				.build(false);
+				.ignoreTrailingAndLeadingWhitespace(false)//
+				.build();
 
 		var arguments = provideArguments(new ByteArrayInputStream(Files.readAllBytes(csvFile)), annotation);
 
-		assertThat(arguments).containsExactly(array("a", "b", "c"));
+		assertThat(arguments).containsExactly(array(" ab ", " cd"), array("ef ", "gh"));
 	}
 
 	private Stream<Object[]> provideArguments(CsvFileSource annotation, String content) {

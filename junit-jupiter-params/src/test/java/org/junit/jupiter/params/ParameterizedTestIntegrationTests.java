@@ -166,30 +166,38 @@ class ParameterizedTestIntegrationTests {
 
 	@Test
 	void executesWithIgnoreTrailingAndLeadingSetToFalseForCsvSource() {
-		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse", String.class);
-		results.allEvents().assertThatEvents().haveAtLeast(1,
-			event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+		var results = execute("testWithIgnoreTrailingAndLeadingWhitespaceSetToFalseForCsvSource", String.class,
+			String.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: ' ab ', ' cd'")))) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ef ', 'gh'"))));
 	}
 
 	@Test
 	void executesWithIgnoreTrailingAndLeadingSetToTrueForCsvSource() {
-		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue", String.class);
-		results.allEvents().assertThatEvents().haveAtLeast(1,
-			event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+		var results = execute("testWithIgnoreTrailingAndLeadingWhitespaceSetToTrueForCsvSource", String.class,
+			String.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ab', 'cd'")))) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ef', 'gh'"))));
 	}
 
 	@Test
 	void executesWithIgnoreTrailingAndLeadingSetToFalseForCsvFileSource() {
-		var results = execute("testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse", String.class);
-		results.allEvents().assertThatEvents().haveAtLeast(1,
-			event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+		var results = execute("testWithIgnoreTrailingAndLeadingWhitespaceSetToFalseForCsvFileSource", String.class,
+			String.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: ' ab ', ' cd'")))) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ef ', 'gh'"))));
 	}
 
 	@Test
 	void executesWithIgnoreTrailingAndLeadingSetToTrueForCsvFileSource() {
-		var results = execute("testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue", String.class);
-		results.allEvents().assertThatEvents().haveAtLeast(1,
-			event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+		var results = execute("testWithIgnoreTrailingAndLeadingWhitespaceSetToTrueForCsvFileSource", String.class,
+			String.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ab', 'cd'")))) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ef', 'gh'"))));
 	}
 
 	@Test
@@ -724,27 +732,27 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@ParameterizedTest
-		@CsvSource(value = { " ab,  cd", "ef, gh" }, ignoreTrailingAndLeadingWhitespace = false)
-		void testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse(String argument) {
-			fail("arg:" + argument);
+		@CsvSource(value = { " ab , cd", "ef ,gh" }, ignoreTrailingAndLeadingWhitespace = false)
+		void testWithIgnoreTrailingAndLeadingWhitespaceSetToFalseForCsvSource(String argument1, String argument2) {
+			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
 		}
 
 		@ParameterizedTest
-		@CsvSource(value = { " ab,  cd", "ef, gh" }, ignoreTrailingAndLeadingWhitespace = true)
-		void testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue(String argument) {
-			fail("arg:" + argument);
+		@CsvSource(value = { " ab , cd", "ef ,gh" }, ignoreTrailingAndLeadingWhitespace = true)
+		void testWithIgnoreTrailingAndLeadingWhitespaceSetToTrueForCsvSource(String argument1, String argument2) {
+			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
 		}
 
 		@ParameterizedTest
 		@CsvFileSource(resources = "/trailing-leading-spaces.csv", ignoreTrailingAndLeadingWhitespace = false)
-		void testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse(String argument) {
-			fail("arg:" + argument);
+		void testWithIgnoreTrailingAndLeadingWhitespaceSetToFalseForCsvFileSource(String argument1, String argument2) {
+			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
 		}
 
 		@ParameterizedTest
 		@CsvFileSource(resources = "/trailing-leading-spaces.csv", ignoreTrailingAndLeadingWhitespace = true)
-		void testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue(String argument) {
-			fail("arg:" + argument);
+		void testWithIgnoreTrailingAndLeadingWhitespaceSetToTrueForCsvFileSource(String argument1, String argument2) {
+			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
 		}
 
 	}

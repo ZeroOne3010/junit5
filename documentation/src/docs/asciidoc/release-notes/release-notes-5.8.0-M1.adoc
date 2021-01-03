@@ -58,6 +58,7 @@ on GitHub.
   underscores as in some JVM languages, to improve readability of long numbers like
   `700_000_000`.
 * Documented constant values in `Resources`.
+* New `ignoreTrailingAndLeadingWhitespace` attribute to control whether or not to trim whitespaces in `@CsvSource` and `@CsvFileSource` (set to `true` by default).
 
 
 [[release-notes-5.8.0-M1-junit-vintage]]

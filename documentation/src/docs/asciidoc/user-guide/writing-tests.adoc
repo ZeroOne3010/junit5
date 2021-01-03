@@ -1260,6 +1260,8 @@ reference is a primitive type.
 NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
 of any custom values configured via the `nullValues` attribute.
 
+Unquoted leading and trailing whitespaces are trimmed by default, but this behavior can be changed by setting the `ignoreTrailingAndLeadingWhitespace` attribute to `true`.
+
 [cols="50,50"]
 |===
 | Example Input                                                       | Resulting Argument List
@@ -1269,6 +1271,7 @@ of any custom values configured via the `nullValues` attribute.
 | `@CsvSource({ "apple, ''" })`                                       | `"apple"`, `""`
 | `@CsvSource({ "apple, " })`                                         | `"apple"`, `null`
 | `@CsvSource(value = { "apple, banana, NIL" }, nullValues = "NIL")` | `"apple"`, `"banana"`, `null`
+| `@CsvSource(value = { " apple , banana" }, ignoreTrailingAndLeadingWhitespace = false)` | `" apple "`, `" banana"`
 |===
 
 [[writing-tests-parameterized-tests-sources-CsvFileSource]]
@@ -1307,6 +1310,8 @@ reference is a primitive type.
 
 NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
 of any custom values configured via the `nullValues` attribute.
+
+Unquoted leading and trailing whitespaces are trimmed by default, but this behavior can be changed by setting the `ignoreTrailingAndLeadingWhitespace` attribute to `true`.
 
 [[writing-tests-parameterized-tests-sources-ArgumentsSource]]
 ===== @ArgumentsSource

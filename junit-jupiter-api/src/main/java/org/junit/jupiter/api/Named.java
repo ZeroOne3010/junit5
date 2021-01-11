@@ -10,6 +10,11 @@
 
 package org.junit.jupiter.api;
 
+import org.apiguardian.api.API;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+@API(status = EXPERIMENTAL, since = "5.8")
 public interface Named<T> {
 
 	static <T> Named<T> of(String name, T payload) {
